@@ -152,10 +152,10 @@ backend_update() {
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${empresa_atualizar}
-  pm2 stop ${empresa_atualizar}-backend
+  cd /home/deploy/${instancia_add}
+  pm2 stop ${instancia_add}-backend
   git pull
-  cd /home/deploy/${empresa_atualizar}/backend
+  cd /home/deploy/${instancia_add}/backend
   npm install
   npm update -f
   npm install @types/fs-extra
@@ -163,7 +163,7 @@ backend_update() {
   npm run build
   npx sequelize db:migrate
   npx sequelize db:seed
-  pm2 start ${empresa_atualizar}-backend
+  pm2 start ${instancia_add}-backend
   pm2 save
 EOF
 
