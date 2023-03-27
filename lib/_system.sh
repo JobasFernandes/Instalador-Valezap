@@ -9,14 +9,14 @@
 #######################################
 system_create_user() {
   print_banner
-  printf "${WHITE} 💻 Agora, vamos criar o usuário valezap para a instancia...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Agora, vamos criar o usuário deploy para a instancia...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
 
   sudo su - root <<EOF
-  useradd -m -p $(openssl passwd -crypt ${mysql_root_password}) -s /bin/bash -G sudo valezap
-  usermod -aG sudo valezap
+  useradd -m -p $(openssl passwd -crypt ${mysql_root_password}) -s /bin/bash -G sudo deploy
+  usermod -aG sudo deploy
 EOF
 
   sleep 2
@@ -35,8 +35,8 @@ system_git_clone() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  git clone ${link_git}  /home/valezap/${instancia_add}/
+  sudo su - deploy <<EOF
+  git clone ${link_git}  /home/deploy/${instancia_add}/
 EOF
 
   sleep 2
@@ -191,8 +191,8 @@ system_pm2_install() {
 
   sudo su - root <<EOF
   npm install -g pm2
-  pm2 startup ubuntu -u valezap
-  env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u valezap --hp /home/valezap/${instancia_add}
+  pm2 startup ubuntu -u deploy
+  env PATH=\$PATH:/usr/bin pm2 startup ubuntu -u deploy --hp /home/deploy/${instancia_add}
 EOF
 
   sleep 2
@@ -297,7 +297,7 @@ system_nginx_conf() {
 
 sudo su - root << EOF
 
-cat > /etc/nginx/conf.d/valezap.conf << 'END'
+cat > /etc/nginx/conf.d/deploy.conf << 'END'
 client_max_body_size 100M;
 END
 
@@ -322,7 +322,7 @@ system_certbot_setup() {
   frontend_domain=$(echo "${frontend_url/https:\/\/}")
 
   sudo su - root <<EOF
-  certbot -m $valezap_email \
+  certbot -m $deploy_email \
           --nginx \
           --agree-tos \
           --non-interactive \

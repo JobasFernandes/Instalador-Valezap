@@ -14,7 +14,7 @@ backend_redis_create() {
   sleep 2
 
   sudo su - root <<EOF
-  usermod -aG docker valezap
+  usermod -aG docker deploy
   docker run --name mysql-${instancia_add} -e MYSQL_ROOT_PASSWORD=${mysql_root_password} -e MYSQL_DATABASE=${instancia_add} -e MYSQL_USER=${instancia_add} -e MYSQL_PASSWORD=${mysql_root_password} --restart always -p ${mysql_port}:3306 -d mariadb:latest --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
   docker run --name phpmyadmin-${instancia_add} -d --link mysql-${instancia_add}:db -p ${phpmyadmin_port}:80 phpmyadmin/phpmyadmin
 EOF
@@ -44,8 +44,8 @@ backend_set_env() {
   frontend_url=${frontend_url%%/*}
   frontend_url=https://$frontend_url
 
-sudo su - valezap << EOF
-  cat <<[-]EOF > /home/valezap/${instancia_add}/backend/.env
+sudo su - deploy << EOF
+  cat <<[-]EOF > /home/deploy/${instancia_add}/backend/.env
 NODE_ENV=
 BACKEND_URL=${backend_url}
 FRONTEND_URL=${frontend_url}
@@ -73,8 +73,8 @@ EOF
 
   sleep 2
 
-sudo su - valezap << EOF
-  cat <<[-]EOF > /home/valezap/${instancia_add}/backend/src/config/database.ts
+sudo su - deploy << EOF
+  cat <<[-]EOF > /home/deploy/${instancia_add}/backend/src/config/database.ts
 require("../bootstrap");
 
 module.exports = {
@@ -110,8 +110,8 @@ backend_node_dependencies() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}/backend
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/backend
   npm install
 EOF
 
@@ -130,8 +130,8 @@ backend_node_build() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}/backend
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/backend
   npm install
   npm run build
 EOF
@@ -151,11 +151,11 @@ backend_update() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}
   pm2 stop ${instancia_add}-backend
   git pull
-  cd /home/valezap/${instancia_add}/backend
+  cd /home/deploy/${instancia_add}/backend
   npm install
   npm update -f
   npm install @types/fs-extra
@@ -182,8 +182,8 @@ backend_db_migrate() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}/backend
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/backend
   npx sequelize db:migrate
 EOF
 
@@ -202,8 +202,8 @@ backend_db_seed() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}/backend
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/backend
   npx sequelize db:seed:all
 EOF
 
@@ -223,8 +223,8 @@ backend_start_pm2() {
 
   sleep 2
 
-  sudo su - valezap <<EOF
-  cd /home/valezap/${instancia_add}/backend
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/backend
   pm2 start dist/server.js --name ${instancia_add}-backend
 
 EOF
