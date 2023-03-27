@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # functions for setting up app frontend
 
 #######################################
@@ -56,21 +56,19 @@ frontend_update() {
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${instancia_add}
-  pm2 stop ${instancia_add}-frontend
-  git reset --hard
+  cd /home/deploy/${empresa_atualizar}
+  pm2 stop ${empresa_atualizar}-frontend
   git pull
-  cd /home/deploy/${instancia_add}/frontend
+  cd /home/deploy/${empresa_atualizar}/frontend
   npm install
   rm -rf build
   npm run build
-  pm2 start ${instancia_add}-frontend
+  pm2 start ${empresa_atualizar}-frontend
   pm2 save
 EOF
 
   sleep 2
 }
-
 
 #######################################
 # sets frontend environment variables
@@ -85,11 +83,11 @@ frontend_set_env() {
   sleep 2
 
   # ensure idempotency
-  backend_url=$(echo "${backend_url/https:\/\/}")
+  backend_url=$(echo "${backend_url/https:\/\//}")
   backend_url=${backend_url%%/*}
   backend_url=https://$backend_url
 
-sudo su - deploy << EOF
+  sudo su - deploy <<EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/frontend/.env
 REACT_APP_BACKEND_URL=${backend_url}
 REACT_APP_HOURS_CLOSE_TICKETS_AUTO = 24
@@ -99,7 +97,7 @@ EOF
 
   sleep 2
 
-sudo su - deploy << EOF
+  sudo su - deploy <<EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/frontend/server.js
 //simple express server to run frontend production build;
 const express = require("express");
@@ -151,9 +149,9 @@ frontend_nginx_setup() {
 
   sleep 2
 
-  frontend_hostname=$(echo "${frontend_url/https:\/\/}")
+  frontend_hostname=$(echo "${frontend_url/https:\/\//}")
 
-sudo su - root << EOF
+  sudo su - root <<EOF
 
 cat > /etc/nginx/sites-available/${instancia_add}-frontend << 'END'
 server {

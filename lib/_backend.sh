@@ -18,7 +18,7 @@ backend_redis_create() {
   docker run --name mysql-${instancia_add} -e MYSQL_ROOT_PASSWORD=${mysql_root_password} -e MYSQL_DATABASE=${instancia_add} -e MYSQL_USER=${instancia_add} -e MYSQL_PASSWORD=${mysql_root_password} --restart always -p ${mysql_port}:3306 -d mariadb:latest --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
   docker run --name phpmyadmin-${instancia_add} -d --link mysql-${instancia_add}:db -p ${phpmyadmin_port}:80 phpmyadmin/phpmyadmin
 EOF
-sleep 2
+  sleep 2
 
 }
 
@@ -35,16 +35,16 @@ backend_set_env() {
   sleep 2
 
   # ensure idempotency
-  backend_url=$(echo "${backend_url/https:\/\/}")
+  backend_url=$(echo "${backend_url/https:\/\//}")
   backend_url=${backend_url%%/*}
   backend_url=https://$backend_url
 
   # ensure idempotency
-  frontend_url=$(echo "${frontend_url/https:\/\/}")
+  frontend_url=$(echo "${frontend_url/https:\/\//}")
   frontend_url=${frontend_url%%/*}
   frontend_url=https://$frontend_url
 
-sudo su - deploy << EOF
+  sudo su - deploy <<EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/backend/.env
 NODE_ENV=
 BACKEND_URL=${backend_url}
@@ -73,7 +73,7 @@ EOF
 
   sleep 2
 
-sudo su - deploy << EOF
+  sudo su - deploy <<EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/backend/src/config/database.ts
 require("../bootstrap");
 
@@ -152,11 +152,10 @@ backend_update() {
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${instancia_add}
-  pm2 stop ${instancia_add}-backend
-  git reset --hard
+  cd /home/deploy/${empresa_atualizar}
+  pm2 stop ${empresa_atualizar}-backend
   git pull
-  cd /home/deploy/${instancia_add}/backend
+  cd /home/deploy/${empresa_atualizar}/backend
   npm install
   npm update -f
   npm install @types/fs-extra
@@ -164,8 +163,8 @@ backend_update() {
   npm run build
   npx sequelize db:migrate
   npx sequelize db:seed
-  pm2 start ${instancia_add}-backend
-  pm2 save 
+  pm2 start ${empresa_atualizar}-backend
+  pm2 save
 EOF
 
   sleep 2
@@ -212,7 +211,7 @@ EOF
 }
 
 #######################################
-# starts backend using pm2 in 
+# starts backend using pm2 in
 # production mode.
 # Arguments:
 #   None
@@ -245,9 +244,9 @@ backend_nginx_setup() {
 
   sleep 2
 
-  backend_hostname=$(echo "${backend_url/https:\/\/}")
+  backend_hostname=$(echo "${backend_url/https:\/\//}")
 
-sudo su - root << EOF
+  sudo su - root <<EOF
 cat > /etc/nginx/sites-available/${instancia_add}-backend << 'END'
 server {
   server_name $backend_hostname;
