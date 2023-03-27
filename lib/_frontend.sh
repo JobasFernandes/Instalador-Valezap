@@ -56,15 +56,14 @@ frontend_update() {
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${instancia_add}
-  pm2 stop ${instancia_add}-frontend
-  git reset --hard
+  cd /home/deploy/${empresa_atualizar}
+  pm2 stop ${empresa_atualizar}-frontend
   git pull
-  cd /home/deploy/${instancia_add}/frontend
+  cd /home/deploy/${empresa_atualizar}/frontend
   npm install
   rm -rf build
   npm run build
-  pm2 start ${instancia_add}-frontend
+  pm2 start ${empresa_atualizar}-frontend
   pm2 save
 EOF
 

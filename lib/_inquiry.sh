@@ -89,6 +89,14 @@ get_mysql_port() {
   read -p "> " mysql_port
 }
 
+get_empresa_atualizar() {
+  
+  print_banner
+  printf "${WHITE} 💻 Digite o nome da Instancia/Empresa que deseja Atualizar (Digite o mesmo nome de quando instalou):${GRAY_LIGHT}"
+  printf "\n\n"
+  read -p "> " empresa_atualizar
+}
+
 
 
 get_urls() {
@@ -106,7 +114,7 @@ get_urls() {
 }
 
 software_update() {
-  get_instancia_add
+  get_empresa_atualizar
   frontend_update
   backend_update
 }
@@ -116,15 +124,15 @@ inquiry_options() {
   print_banner
   printf "${WHITE} 💻 Bem vindo(a) ao instalador Valezap, Selecione abaixo a proxima ação!${GRAY_LIGHT}"
   printf "\n\n"
-  printf "   [1] Instalar o Valezap\n"
-  printf "   [2] Atualizar o Valezap\n"
+  printf "${GREEN}   [0] ${WHITE} • ${YELLOW} INSTALAR\n"
+  printf "${GREEN}   [1] ${WHITE} • ${YELLOW} ATUALIZAR\n"
   printf "\n"
   read -p "> " option
 
   case "${option}" in
-    1) get_urls ;;
+    0) get_urls ;;
 
-    2) 
+    1) 
       software_update 
       exit
       ;;
