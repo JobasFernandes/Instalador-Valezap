@@ -154,6 +154,7 @@ backend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}
   pm2 stop ${instancia_add}-backend
+  git reset --hard
   git pull
   cd /home/deploy/${instancia_add}/backend
   npm install

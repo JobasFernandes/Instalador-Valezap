@@ -58,6 +58,7 @@ frontend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}
   pm2 stop ${instancia_add}-frontend
+  git reset --hard
   git pull
   cd /home/deploy/${instancia_add}/frontend
   npm install
