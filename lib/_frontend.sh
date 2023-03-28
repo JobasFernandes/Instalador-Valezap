@@ -36,6 +36,18 @@ frontend_node_build() {
 
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}/frontend
+  if [ ! -e src/config.json ]; then
+  echo "Criando o arquivo config.json"
+  cp src/config.json.example src/config.json
+  else
+  echo "Arquivo config.json já criado"
+fi
+EOF
+
+  sleep 2
+
+  sudo su - deploy <<EOF
+  cd /home/deploy/${instancia_add}/frontend
   npm install
   npm run build
 EOF
@@ -56,6 +68,17 @@ frontend_update() {
   sleep 2
 
   sudo su - deploy <<EOF
+  cd /home/deploy/${empresa_atualizar}/frontend
+  if [ ! -e src/config.json ]; then
+  echo "Criando o arquivo config.json"
+  cp src/config.json.example src/config.json
+  else
+  echo "Arquivo config.json já criado"
+fi
+EOF
+  sleep 2
+
+  sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-frontend
   git pull
@@ -65,18 +88,6 @@ frontend_update() {
   npm run build
   pm2 start ${empresa_atualizar}-frontend
   pm2 save
-EOF
-
-  sleep 2
-
-  sudo su - deploy <<EOF
-  cd /home/deploy/${empresa_atualizar}/frontend
-  if [ ! -e src/config.json ]; then
-  echo "Criando o arquivo config.json"
-  cp src/config.json.example src/config.json
-  else
-  echo "Arquivo config.json já criado"
-fi
 EOF
 
   sleep 2
@@ -128,7 +139,7 @@ EOF
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${empresa_atualizar}/frontend
+  cd /home/deploy/${instancia_add}/frontend
   if [ ! -e src/config.json ]; then
   echo "Criando o arquivo config.json"
   cp src/config.json.example src/config.json
