@@ -68,6 +68,17 @@ frontend_update() {
 EOF
 
   sleep 2
+
+  sudo su - deploy <<EOF
+  if [ ! -e src/config.json ]; then
+  echo "Criando o arquivo config.json"
+  cp src/config.json.example src/config.json
+  else
+  echo "Arquivo config.json já criado"
+fi
+EOF
+
+  sleep 2
 }
 
 #######################################
