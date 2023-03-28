@@ -81,6 +81,7 @@ EOF
   sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-frontend
+  git reset --hard
   git pull
   cd /home/deploy/${empresa_atualizar}/frontend
   npm install
