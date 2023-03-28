@@ -70,6 +70,7 @@ EOF
   sleep 2
 
   sudo su - deploy <<EOF
+  cd /home/deploy/${empresa_atualizar}/frontend
   if [ ! -e src/config.json ]; then
   echo "Criando o arquivo config.json"
   cp src/config.json.example src/config.json
@@ -127,6 +128,7 @@ EOF
   sleep 2
 
   sudo su - deploy <<EOF
+  cd /home/deploy/${empresa_atualizar}/frontend
   if [ ! -e src/config.json ]; then
   echo "Criando o arquivo config.json"
   cp src/config.json.example src/config.json
