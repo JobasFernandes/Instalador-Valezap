@@ -114,6 +114,13 @@ app.listen(process.env.SERVER_PORT || 3333);
 EOF
 
   sleep 2
+
+  sudo su - deploy <<EOF
+  cp src/config.json.example src/config.json
+EOF
+
+  sleep 2
+
 }
 
 #######################################
