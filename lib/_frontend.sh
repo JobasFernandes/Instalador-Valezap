@@ -114,7 +114,7 @@ frontend_set_env() {
   sudo su - deploy <<EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/frontend/.env
 REACT_APP_BACKEND_URL=${backend_url}
-REACT_APP_HOURS_CLOSE_TICKETS_AUTO = 24
+REACT_APP_HOURS_CLOSE_TICKETS_AUTO = 12
 SERVER_PORT = ${frontend_port}
 [-]EOF
 EOF
@@ -132,7 +132,7 @@ app.use(express.static(path.join(__dirname, "build")));
 app.get("/*", function (req, res) {
 	res.sendFile(path.join(__dirname, "build", "index.html"));
 });
-app.listen(process.env.SERVER_PORT || 3333);
+app.listen(process.env.SERVER_PORT);
 
 [-]EOF
 EOF
