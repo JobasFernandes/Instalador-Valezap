@@ -16,7 +16,7 @@ frontend_node_dependencies() {
 
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}/frontend
-  npm install
+  npm install --force
 EOF
 
   sleep 2
@@ -48,7 +48,7 @@ EOF
 
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}/frontend
-  npm install
+  npm install --force
   npm run build
 EOF
 
@@ -84,7 +84,7 @@ EOF
   git reset --hard
   git pull
   cd /home/deploy/${empresa_atualizar}/frontend
-  npm install
+  npm install --force
   rm -rf build
   npm run build
   pm2 start ${empresa_atualizar}-frontend
