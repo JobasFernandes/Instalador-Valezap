@@ -219,15 +219,23 @@ EOF
 #######################################
 backend_start_pm2() {
   print_banner
-  printf "${WHITE} 💻 Iniciando pm2 (backend)...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Iniciando pm2 em cluster (backend)...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
 
   sudo su - deploy <<EOF
-  cd /home/deploy/${instancia_add}/backend
-  pm2 start dist/server.js --name ${instancia_add}-backend
-
+  cat <<[-]EOF > /home/deploy/${instancia_add}/backend/backend.config.js
+module.exports = [{
+  script: 'dist/server.js',
+  name: '${instancia_add}-backend',
+  exec_mode: 'cluster',
+  cron_restart: '00 00 * * *',
+  max_memory_restart: '450M',
+  instances: 1,
+  watch: false
+}]
+[-]EOF
 EOF
 
   sleep 2
