@@ -236,6 +236,7 @@ module.exports = [{
   watch: false
 }]
 [-]EOF
+  pm2 start backend.config.js
 EOF
 
   sleep 2
